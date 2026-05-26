@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from MyApps.usuarios.models import Cliente, Domiciliario
+from django.contrib.auth.hashers import make_password
+from MyApps.usuarios.models import Cliente, Domiciliario, Usuario
 
 
 class ClienteSerializer(serializers.ModelSerializer):
@@ -7,11 +8,6 @@ class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
         fields = "__all__"
-        extra_kwargs = {
-            "passwordCliente": {
-                "write_only": True
-            }
-        }
 
     def validate_nombresCliente(self, value):
         if len(value) < 3:
@@ -21,11 +17,6 @@ class ClienteSerializer(serializers.ModelSerializer):
     def validate_apellidosCliente(self, value):
         if len(value) < 3:
             raise serializers.ValidationError("El apellido no puede ser tan corto")
-        return value
-
-    def validate_passwordCliente(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("El password debe tener mínimo 8 caracteres")
         return value
 
     def validate_telefonoCliente(self, value):
@@ -73,10 +64,55 @@ class DomiciliarioSerializer(serializers.ModelSerializer):
     def validate_placaDomiciliario(self, value):
         value = value.upper()
 
-        if len(value) != 6:
-            raise serializers.ValidationError("La placa debe tener 6 caracteres")
+        if len(value) < 5:
+            raise serializers.ValidationError("La placa debe tener mínimo 5 caracteres")
 
-        if not value[:3].isalpha() or not value[3:].isdigit():
-            raise serializers.ValidationError("La placa debe tener el formato ABC123")
+        if not all(c.isalnum() or c == "-" for c in value):
+            raise serializers.ValidationError("La placa solo debe contener letras, números o guiones")
 
         return value
+
+
+class UsuarioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Usuario
+        fields = "__all__"
+        extra_kwargs = {
+            "passwordUsuario": {
+                "write_only": True
+            }
+        }
+
+    def validate_usernameUsuario(self, value):
+        if len(value) < 4:
+            raise serializers.ValidationError("El usuario debe tener mínimo 4 caracteres")
+        return value
+
+    def validate_passwordUsuario(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("El password debe tener mínimo 8 caracteres")
+        return value
+
+    def validate(self, data):
+        cliente = data.get("cliente", getattr(self.instance, "cliente", None))
+        domiciliario = data.get("domiciliario", getattr(self.instance, "domiciliario", None))
+
+        if cliente and domiciliario:
+            raise serializers.ValidationError(
+                "Un usuario solo puede estar vinculado a cliente o a domiciliario"
+            )
+
+        return data
+
+    def create(self, validated_data):
+        validated_data["passwordUsuario"] = make_password(validated_data["passwordUsuario"])
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        password = validated_data.get("passwordUsuario")
+        if password:
+            validated_data["passwordUsuario"] = make_password(password)
+        else:
+            validated_data.pop("passwordUsuario", None)
+        return super().update(instance, validated_data)

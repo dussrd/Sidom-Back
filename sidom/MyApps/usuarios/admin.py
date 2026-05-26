@@ -1,5 +1,5 @@
 from django.contrib import admin
-from MyApps.usuarios.models import Cliente, Domiciliario
+from MyApps.usuarios.models import Cliente, Domiciliario, Usuario
 
 
 class ClienteAdmin(admin.ModelAdmin):
@@ -34,5 +34,30 @@ class DomiciliarioAdmin(admin.ModelAdmin):
     )
 
 
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'usernameUsuario',
+        'tipoRol',
+        'activoUsuario',
+        'cliente',
+        'domiciliario'
+    )
+
+    search_fields = (
+        'usernameUsuario',
+        'cliente__nombresCliente',
+        'cliente__apellidosCliente',
+        'domiciliario__nombresDomiciliario',
+        'domiciliario__apellidosDomiciliario'
+    )
+
+    list_filter = (
+        'activoUsuario',
+        'tipoRol'
+    )
+
+
 admin.site.register(Cliente, ClienteAdmin)
 admin.site.register(Domiciliario, DomiciliarioAdmin)
+admin.site.register(Usuario, UsuarioAdmin)

@@ -4,7 +4,13 @@ from MyApps.asignaciones.models import Asignacion
 
 
 class UbicacionDomiciliario(models.Model):
+    id = models.AutoField(
+        primary_key=True,
+        db_column="UBIC_ID"
+    )
+
     latitudUbicacion = models.DecimalField(
+        db_column="UBIC_LATITUD",
         max_digits=10,
         decimal_places=8,
         validators=[
@@ -15,6 +21,7 @@ class UbicacionDomiciliario(models.Model):
     )
 
     longitudUbicacion = models.DecimalField(
+        db_column="UBIC_LONGITUD",
         max_digits=11,
         decimal_places=8,
         validators=[
@@ -25,11 +32,13 @@ class UbicacionDomiciliario(models.Model):
     )
 
     fechaHoraUbicacion = models.DateTimeField(
+        db_column="UBIC_FECHA_HORA",
         auto_now_add=True
     )
 
     asignacion = models.ForeignKey(
         Asignacion,
+        db_column="ASIG_ID",
         on_delete=models.CASCADE,
         related_name="ubicaciones"
     )
@@ -38,6 +47,7 @@ class UbicacionDomiciliario(models.Model):
         return f"Ubicación #{self.id}"
 
     class Meta:
+        db_table = "TBL_UBICACIONES_DOMICILIARIO"
         verbose_name = "ubicación domiciliario"
         verbose_name_plural = "ubicaciones domiciliarios"
         ordering = ["-fechaHoraUbicacion"]
