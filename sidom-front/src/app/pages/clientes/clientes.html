@@ -1,0 +1,73 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Clientes</h2>
+    <p>Gestión de clientes registrados en el sistema</p>
+  </div>
+  <button class="btn-primary" mat-flat-button (click)="openDialog()">
+    <span class="material-icons">add</span>Nuevo Cliente
+  </button>
+</div>
+
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Lista de Clientes</h3>
+    <div class="table-search">
+      <div class="search-box">
+        <span class="material-icons">search</span>
+        <input placeholder="Buscar..." (input)="filter($event)" />
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+  } @else {
+    <mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="identificacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Identificación</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.identificacionCliente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Completo</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.nombresCliente }} {{ r.apellidosCliente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="correo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Correo</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.correoCliente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="telefono">
+        <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.telefonoCliente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="direccion">
+        <mat-header-cell *matHeaderCellDef>Dirección</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.direccionCliente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          <div class="actions-cell">
+            <button mat-icon-button class="btn-icon edit" (click)="openDialog(r)" title="Editar">
+              <span class="material-icons">edit</span>
+            </button>
+            <button mat-icon-button class="btn-icon delete" (click)="delete(r.id!)" title="Eliminar">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <span class="material-icons">people_outline</span>
+            <h4>No se encontraron clientes</h4>
+            <p>Agrega el primer cliente usando el botón "Nuevo Cliente"</p>
+          </div>
+        </td>
+      </tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  }
+</div>

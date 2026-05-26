@@ -1,0 +1,132 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Asignaciones</h2>
+    <p>Gestión de solicitudes disponibles y asignaciones</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+} @else {
+  <mat-tab-group dynamicHeight>
+    <!-- Tab 1: Solicitudes Disponibles -->
+    <mat-tab label="Solicitudes Disponibles">
+      <div style="padding:16px 0">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>Solicitudes Disponibles</h3>
+            @if (isAdmin) {
+              <button class="btn-primary" mat-flat-button (click)="openDisponible()">
+                <span class="material-icons">add</span>Nueva Disponible
+              </button>
+            }
+          </div>
+          <mat-table [dataSource]="dsDisponible" matSort>
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+              <mat-cell *matCellDef="let r">{{ r.id }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="solicitud">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Solicitud</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <span style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block"
+                      [title]="getSolicitud(r.solicitud)">{{ getSolicitud(r.solicitud) }}</span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="domiciliario">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Domiciliario</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                @if (r.domiciliario) {
+                  <span class="badge info">{{ getDomiciliario(r.domiciliario) }}</span>
+                } @else {
+                  <span class="badge neutral">Sin asignar</span>
+                }
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge neutral">{{ getTipo(r.tipoEstado) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fecha">
+              <mat-header-cell *matHeaderCellDef>Publicación</mat-header-cell>
+              <mat-cell *matCellDef="let r">{{ r.fechaPublicacionSolicitudDisponible | slice:0:10 }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <div class="actions-cell">
+                  @if (canAceptar(r)) {
+                    <button mat-icon-button class="btn-icon edit" (click)="aceptar(r)" title="Aceptar solicitud">
+                      <span class="material-icons">how_to_reg</span>
+                    </button>
+                  }
+                  @if (isAdmin) {
+                    <button mat-icon-button class="btn-icon edit" (click)="openDisponible(r)"><span class="material-icons">edit</span></button>
+                    <button mat-icon-button class="btn-icon delete" (click)="delDisponible(r.id!)"><span class="material-icons">delete</span></button>
+                  }
+                </div>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="colsDisponible"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: colsDisponible;"></mat-row>
+            <tr class="mat-row" *matNoDataRow>
+              <td [attr.colspan]="colsDisponible.length">
+                <div class="empty-state"><span class="material-icons">assignment</span><h4>No hay solicitudes disponibles</h4></div>
+              </td>
+            </tr>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons />
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Asignaciones -->
+    <mat-tab label="Asignaciones">
+      <div style="padding:16px 0">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>Asignaciones</h3>
+            @if (isAdmin) {
+              <button class="btn-primary" mat-flat-button (click)="openAsignacion()">
+                <span class="material-icons">add</span>Nueva Asignación
+              </button>
+            }
+          </div>
+          <mat-table [dataSource]="dsAsignacion">
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+              <mat-cell *matCellDef="let r">{{ r.id }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="solicitudDisponible">
+              <mat-header-cell *matHeaderCellDef>Solicitud Disponible</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge info">{{ getDisponible(r.solicitudDisponible) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fechaAsignacion">
+              <mat-header-cell *matHeaderCellDef>Fecha Asignación</mat-header-cell>
+              <mat-cell *matCellDef="let r">{{ r.fechaAsignacion }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                @if (isAdmin) {
+                  <div class="actions-cell">
+                    <button mat-icon-button class="btn-icon edit" (click)="openAsignacion(r)"><span class="material-icons">edit</span></button>
+                    <button mat-icon-button class="btn-icon delete" (click)="delAsignacion(r.id!)"><span class="material-icons">delete</span></button>
+                  </div>
+                }
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="colsAsignacion"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: colsAsignacion;"></mat-row>
+            <tr class="mat-row" *matNoDataRow>
+              <td [attr.colspan]="colsAsignacion.length">
+                <div class="empty-state"><span class="material-icons">task_alt</span><h4>No hay asignaciones</h4></div>
+              </td>
+            </tr>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons />
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

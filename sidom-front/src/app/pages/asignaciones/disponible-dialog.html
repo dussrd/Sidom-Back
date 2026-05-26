@@ -1,0 +1,48 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Solicitud Disponible' : 'Nueva Solicitud Disponible' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff"><span class="material-icons">close</span></button>
+  </div>
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Solicitud</mat-label>
+          <mat-select formControlName="solicitud">
+            @for (s of solicitudes(); track s.id) {
+              <mat-option [value]="s.id">#{{ s.id }} — {{ s.descripcionSolicitud | slice:0:40 }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Domiciliario (opcional)</mat-label>
+          <mat-select formControlName="domiciliario">
+            <mat-option [value]="null">Sin asignar</mat-option>
+            @for (d of domiciliarios(); track d.id) {
+              <mat-option [value]="d.id">{{ d.nombresDomiciliario }} {{ d.apellidosDomiciliario }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado (automático)</mat-label>
+          <mat-select formControlName="tipoEstado">
+            <mat-option [value]="null">Publicada automáticamente</mat-option>
+            @for (t of tiposDisponibles(); track t.id) {
+              <mat-option [value]="t.id">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

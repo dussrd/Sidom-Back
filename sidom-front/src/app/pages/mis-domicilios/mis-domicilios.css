@@ -1,0 +1,310 @@
+/* ===== Layout principal split ===== */
+.rappi-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .rappi-layout { grid-template-columns: 1fr; }
+  .map-panel { display: none; }
+}
+
+/* ===== Panel izquierdo ===== */
+.orders-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.orders-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a2035;
+  margin: 0 0 2px;
+}
+
+.orders-header p {
+  font-size: 12px;
+  color: #8090b0;
+  margin: 0;
+}
+
+.btn-nuevo-pedido {
+  background: linear-gradient(135deg, #1565c0, #1e88e5) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(21,101,192,0.3) !important;
+}
+
+.btn-nuevo-pedido .material-icons { font-size: 18px; }
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== Empty state ===== */
+.empty-orders {
+  text-align: center;
+  padding: 48px 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.empty-orders .material-icons { font-size: 56px; color: #cfd8dc; display: block; margin-bottom: 12px; }
+.empty-orders h3 { font-size: 18px; font-weight: 700; color: #455a64; margin: 0 0 6px; }
+.empty-orders p  { font-size: 13px; color: #90a4ae; margin: 0 0 20px; }
+
+/* ===== Order card ===== */
+.order-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.order-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.order-card--active { border-color: #1565c0; box-shadow: 0 4px 20px rgba(21,101,192,0.2); }
+.order-card--rechazada { opacity: 0.7; }
+
+/* Top row */
+.oc-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 10px;
+}
+
+.oc-service-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #e3f2fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.oc-service-icon .material-icons { font-size: 22px; color: #1565c0; }
+.svc-comida    .material-icons { color: #e65100; }
+.svc-farmacia  .material-icons { color: #2e7d32; }
+.svc-supermercado .material-icons { color: #6a1b9a; }
+.svc-mensajeria .material-icons { color: #0277bd; }
+
+.oc-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.oc-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2035;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oc-meta { font-size: 11px; color: #8090b0; margin-top: 2px; }
+
+.oc-badge { font-size: 10px; white-space: nowrap; flex-shrink: 0; }
+
+/* Timeline */
+.oc-timeline {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 12px;
+  gap: 0;
+}
+
+.tl-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tl-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e0e8f4;
+  background: #f5f7fa;
+  transition: all 0.3s;
+}
+
+.tl-dot .material-icons { font-size: 16px; color: #cfd8dc; }
+
+.tl-step.tl-done   .tl-dot { background: #1565c0; border-color: #1565c0; }
+.tl-step.tl-done   .tl-dot .material-icons { color: #fff; }
+.tl-step.tl-active .tl-dot { background: #fff; border-color: #1565c0; box-shadow: 0 0 0 4px rgba(21,101,192,0.15); }
+.tl-step.tl-active .tl-dot .material-icons { color: #1565c0; }
+
+.tl-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #cfd8dc;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.tl-step.tl-done   .tl-label { color: #1565c0; }
+.tl-step.tl-active .tl-label { color: #1565c0; }
+
+.tl-line {
+  flex: 1;
+  height: 2px;
+  background: #e0e8f4;
+  margin-bottom: 14px;
+  transition: background 0.3s;
+}
+
+.tl-line--done { background: #1565c0; }
+
+/* Rechazada */
+.oc-rechazada {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 12px;
+  color: #c62828;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.oc-rechazada .material-icons { font-size: 18px; }
+
+/* Domiciliario */
+.oc-domi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #f0f7ff;
+  border-top: 1px solid #e3f2fd;
+}
+
+.oc-domi-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #1565c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.oc-domi-avatar .material-icons { font-size: 18px; color: #fff; }
+
+.oc-domi-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.oc-domi-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2035;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oc-domi-meta { font-size: 11px; color: #8090b0; margin-top: 1px; }
+
+.gps-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4caf50;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(76,175,80,0.25);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(76,175,80,0.25); }
+  50%       { box-shadow: 0 0 0 6px rgba(76,175,80,0.1); }
+}
+
+/* Dirección */
+.oc-address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px 12px;
+  font-size: 12px;
+  color: #546e7a;
+  border-top: 1px solid #f0f2f5;
+  flex-wrap: wrap;
+}
+
+.oc-address .material-icons { font-size: 15px; color: #ef5350; flex-shrink: 0; }
+.oc-address-from { color: #8090b0; display: flex; align-items: center; gap: 2px; }
+
+/* ===== Panel derecho: mapa ===== */
+.map-panel { position: sticky; top: 20px; }
+
+.map-sticky {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* Info del pedido seleccionado */
+.map-selected-info {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.msi-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #455a64;
+}
+
+.msi-row .material-icons { font-size: 16px; color: #90a4ae; flex-shrink: 0; }
+.msi-dest .material-icons { color: #ef5350; }
+.msi-gps  { color: #2e7d32; }
+.msi-gps  .material-icons { color: #4caf50; }
+.msi-nogps { color: #8090b0; font-style: italic; }
+
+.domicilios-map {
+  height: 480px;
+  width: 100%;
+}

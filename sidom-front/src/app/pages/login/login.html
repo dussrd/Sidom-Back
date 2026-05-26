@@ -1,0 +1,117 @@
+<div class="login-layout">
+  <!-- Panel izquierdo: branding -->
+  <div class="login-brand">
+    <div class="brand-content">
+      <div class="brand-icon">
+        <span class="material-icons">local_shipping</span>
+      </div>
+      <h1>SIDOM</h1>
+      <p class="brand-sub">Sistema de Gestión de Domicilios</p>
+
+      <div class="brand-features">
+        <div class="feature-item">
+          <span class="material-icons">speed</span>
+          <span>Seguimiento en tiempo real</span>
+        </div>
+        <div class="feature-item">
+          <span class="material-icons">route</span>
+          <span>Optimización de rutas</span>
+        </div>
+        <div class="feature-item">
+          <span class="material-icons">verified_user</span>
+          <span>Gestión segura de usuarios</span>
+        </div>
+        <div class="feature-item">
+          <span class="material-icons">analytics</span>
+          <span>Reportes y estadísticas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-footer">
+      <p>Universidad de La Guajira · Base de Datos II · 2026</p>
+    </div>
+  </div>
+
+  <!-- Panel derecho: formulario -->
+  <div class="login-form-panel">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Iniciar Sesión</h2>
+        <p>Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="username"
+                 placeholder="Correo o identificación" autocomplete="username" />
+          <mat-icon matSuffix>person</mat-icon>
+          @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
+            <mat-error>El usuario es requerido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput formControlName="password"
+                 [type]="showPass() ? 'text' : 'password'"
+                 placeholder="Contraseña" autocomplete="current-password" />
+          <button matSuffix mat-icon-button type="button" (click)="showPass.set(!showPass())">
+            <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+            <mat-error>La contraseña es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <div class="login-error">
+            <span class="material-icons">error_outline</span>
+            {{ error() }}
+          </div>
+        }
+
+        <button mat-flat-button type="submit" class="login-btn" [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="20" style="margin-right:8px" />
+            Verificando...
+          } @else {
+            <ng-container>
+              <span class="material-icons">login</span>
+              Ingresar
+            </ng-container>
+          }
+        </button>
+      </form>
+
+      <p class="register-link">
+        ¿No tienes cuenta?
+        <a routerLink="/register">Regístrate aquí</a>
+      </p>
+
+      <!-- Credenciales de demostración -->
+      <div class="demo-creds">
+        <p class="demo-title">
+          <span class="material-icons">info</span>
+          Credenciales de prueba
+        </p>
+        <div class="cred-row">
+          <span class="cred-role admin">ADMIN</span>
+          <code>admin&#64;sidom.com</code>
+          <code>admin123</code>
+        </div>
+        <div class="cred-row">
+          <span class="cred-role cliente">CLIENTE</span>
+          <code>correo del cliente</code>
+          <code>contraseña del cliente</code>
+        </div>
+        <div class="cred-row">
+          <span class="cred-role domiciliario">DOMICILIARIO</span>
+          <code>identificación</code>
+          <code>placa del vehículo</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

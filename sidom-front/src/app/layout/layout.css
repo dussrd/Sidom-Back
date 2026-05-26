@@ -1,0 +1,87 @@
+/* Layout-specific styles */
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  margin: 0 12px 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-user-icon {
+  font-size: 32px !important;
+  color: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+  width: fit-content;
+}
+
+.sidebar-user-role.role-admin   { background: rgba(30,136,229,0.3); color: #90caf9; }
+.sidebar-user-role.role-cliente { background: rgba(46,125,50,0.3);  color: #a5d6a7; }
+.sidebar-user-role.role-dom     { background: rgba(230,81,0,0.3);   color: #ffcc80; }
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.logout-btn:hover {
+  background: rgba(239,68,68,0.2);
+  color: #fca5a5;
+  border-color: rgba(239,68,68,0.3);
+}
+
+.logout-btn .material-icons {
+  font-size: 18px;
+}
+
+.header-user-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.header-user-badge.role-admin   { background: #e3f2fd; color: #1565c0; }
+.header-user-badge.role-cliente { background: #e8f5e9; color: #2e7d32; }
+.header-user-badge.role-dom     { background: #fff3e0; color: #e65100; }

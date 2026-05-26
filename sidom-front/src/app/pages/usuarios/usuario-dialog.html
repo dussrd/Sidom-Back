@@ -1,0 +1,73 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff"><span class="material-icons">close</span></button>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="usernameUsuario" />
+          @if (form.get('usernameUsuario')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ isEdit ? 'Nueva contraseña' : 'Contraseña' }}</mat-label>
+          <input matInput type="password" formControlName="passwordUsuario" />
+          @if (!isEdit && form.get('passwordUsuario')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Rol</mat-label>
+          <mat-select formControlName="tipoRol">
+            @for (rol of roles(); track rol.id) {
+              <mat-option [value]="rol.id">{{ rol.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="activoUsuario">
+            <mat-option [value]="true">Activo</mat-option>
+            <mat-option [value]="false">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <mat-select formControlName="cliente">
+            <mat-option [value]="null">Sin cliente</mat-option>
+            @for (c of clientes(); track c.id) {
+              <mat-option [value]="c.id">{{ c.nombresCliente }} {{ c.apellidosCliente }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Domiciliario</mat-label>
+          <mat-select formControlName="domiciliario">
+            <mat-option [value]="null">Sin domiciliario</mat-option>
+            @for (d of domiciliarios(); track d.id) {
+              <mat-option [value]="d.id">{{ d.nombresDomiciliario }} {{ d.apellidosDomiciliario }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

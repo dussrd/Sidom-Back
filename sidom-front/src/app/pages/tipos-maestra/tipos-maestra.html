@@ -1,0 +1,68 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Tipos Maestra</h2>
+    <p>Configuración de tipos y estados del sistema</p>
+  </div>
+  <button class="btn-primary" mat-flat-button (click)="openDialog()">
+    <span class="material-icons">add</span>Nuevo Tipo
+  </button>
+</div>
+
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Lista de Tipos</h3>
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input placeholder="Buscar..." (input)="filter($event)" />
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+  } @else {
+    <mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.id }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="nombreTipo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let r"><strong>{{ r.nombreTipo }}</strong></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="codigoTipo">
+        <mat-header-cell *matHeaderCellDef>Código</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.codigoTipo || '—' }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="padreTipo">
+        <mat-header-cell *matHeaderCellDef>Padre ID</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.padreTipo ? '#' + r.padreTipo : '—' }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="esTabla">
+        <mat-header-cell *matHeaderCellDef>Es Tabla</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          <span [class]="'badge ' + (r.esTabla ? 'success' : 'neutral')">{{ r.esTabla ? 'Sí' : 'No' }}</span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          <div class="actions-cell">
+            <button mat-icon-button class="btn-icon edit" (click)="openDialog(r)"><span class="material-icons">edit</span></button>
+            <button mat-icon-button class="btn-icon delete" (click)="delete(r.id!)"><span class="material-icons">delete</span></button>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <span class="material-icons">category</span>
+            <h4>No hay tipos configurados</h4>
+          </div>
+        </td>
+      </tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  }
+</div>

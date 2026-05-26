@@ -1,0 +1,93 @@
+.perfil-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.perfil-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.perfil-avatar .material-icons {
+  font-size: 80px;
+  color: #b0bec5;
+}
+
+.perfil-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a2035;
+}
+
+.perfil-role-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.perfil-role-badge.role-cliente      { background: #e8f5e9; color: #2e7d32; }
+.perfil-role-badge.role-domiciliario { background: #fff3e0; color: #e65100; }
+
+.perfil-fields {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid #f0f2f5;
+  padding-top: 16px;
+}
+
+.perfil-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f2f5;
+  gap: 12px;
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8090b0;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 160px;
+}
+
+.field-label .material-icons {
+  font-size: 16px;
+  color: #90a4ae;
+}
+
+.field-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2035;
+  text-align: right;
+}
+
+.perfil-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c62828;
+  background: #ffebee;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+}

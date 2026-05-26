@@ -1,0 +1,70 @@
+@if (loading()) {
+  <div class="loading-spinner">
+    <mat-spinner diameter="48" />
+  </div>
+} @else {
+  <div class="stats-grid">
+    @for (stat of stats(); track stat.label) {
+      <div class="stat-card">
+        <div class="stat-icon {{ stat.color }}">
+          <span class="material-icons">{{ stat.icon }}</span>
+        </div>
+        <div class="stat-info">
+          <p>{{ stat.label }}</p>
+          <h3>{{ stat.value }}</h3>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>
+        <span class="material-icons" style="vertical-align:middle;margin-right:8px;color:#1565c0">info</span>
+        {{ greeting() }}
+      </h3>
+      <p style="color:#6b7280;font-size:14px;line-height:1.7">
+        Sistema de Gestión de Domicilios. Use el menú lateral para navegar entre
+        los módulos disponibles según tu rol.
+      </p>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <span class="badge info">Django REST Framework</span>
+        <span class="badge success">Angular 20</span>
+        <span class="badge neutral">Angular Material</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>
+        <span class="material-icons" style="vertical-align:middle;margin-right:8px;color:#2e7d32">check_circle</span>
+        Estado del Sistema
+      </h3>
+      <ul class="activity-list">
+        <li class="activity-item">
+          <span class="activity-dot" style="background:#42a5f5"></span>
+          <div class="activity-text">
+            <strong>API Backend</strong>
+            <span>http://localhost:8000/api</span>
+          </div>
+          <span class="badge success">Conectado</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot" style="background:#66bb6a"></span>
+          <div class="activity-text">
+            <strong>Base de Datos</strong>
+            <span>MySQL</span>
+          </div>
+          <span class="badge success">Activo</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot" style="background:#ffa726"></span>
+          <div class="activity-text">
+            <strong>Frontend</strong>
+            <span>Angular 20 + Material</span>
+          </div>
+          <span class="badge success">Activo</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+}

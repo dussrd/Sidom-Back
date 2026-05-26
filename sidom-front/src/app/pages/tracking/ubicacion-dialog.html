@@ -1,0 +1,61 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Ubicación' : 'Registrar Ubicación' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Latitud (-90 a 90)</mat-label>
+          <input matInput type="number" formControlName="latitudUbicacion" step="0.00000001" />
+          @if (form.get('latitudUbicacion')?.hasError('required')) { <mat-error>Requerido</mat-error> }
+          @if (form.get('latitudUbicacion')?.hasError('min') || form.get('latitudUbicacion')?.hasError('max')) {
+            <mat-error>Rango válido: -90 a 90</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Longitud (-180 a 180)</mat-label>
+          <input matInput type="number" formControlName="longitudUbicacion" step="0.00000001" />
+          @if (form.get('longitudUbicacion')?.hasError('required')) { <mat-error>Requerido</mat-error> }
+          @if (form.get('longitudUbicacion')?.hasError('min') || form.get('longitudUbicacion')?.hasError('max')) {
+            <mat-error>Rango válido: -180 a 180</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Asignación</mat-label>
+          @if (loadingOptions) {
+            <mat-select formControlName="asignacion" [disabled]="true">
+              <mat-option>Cargando...</mat-option>
+            </mat-select>
+          } @else {
+            <mat-select formControlName="asignacion">
+              @if (asignaciones().length === 0) {
+                <mat-option disabled>No hay asignaciones registradas</mat-option>
+              }
+              @for (a of asignaciones(); track a.id) {
+                <mat-option [value]="a.id">{{ a.label }}</mat-option>
+              }
+            </mat-select>
+          }
+          @if (form.get('asignacion')?.hasError('required')) {
+            <mat-error>Selecciona una asignación</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving || loadingOptions">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Registrar') }}
+      </button>
+    </div>
+  </form>
+</div>

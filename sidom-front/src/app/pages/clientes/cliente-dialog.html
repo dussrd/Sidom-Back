@@ -1,0 +1,70 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Identificación</mat-label>
+          <input matInput formControlName="identificacionCliente" placeholder="Ej: 1234567890" />
+          @if (form.get('identificacionCliente')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+          @if (form.get('identificacionCliente')?.hasError('pattern')) {
+            <mat-error>Solo números</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefonoCliente" placeholder="Ej: 3001234567" />
+          @if (form.get('telefonoCliente')?.hasError('pattern')) {
+            <mat-error>Solo números</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombresCliente" />
+          @if (form.get('nombresCliente')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidosCliente" />
+          @if (form.get('apellidosCliente')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput type="email" formControlName="correoCliente" />
+          @if (form.get('correoCliente')?.hasError('email')) {
+            <mat-error>Correo inválido</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccionCliente" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

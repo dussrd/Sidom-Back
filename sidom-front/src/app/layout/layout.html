@@ -1,0 +1,71 @@
+<div class="sidom-layout">
+  <!-- Sidebar -->
+  <aside class="sidom-sidebar">
+    <div class="sidebar-logo">
+      <span class="material-icons logo-icon">local_shipping</span>
+      <h1>SIDOM</h1>
+      <p>Sistema de Domicilios</p>
+    </div>
+
+    <!-- User info in sidebar -->
+    @if (currentUser()) {
+      <div class="sidebar-user">
+        <span class="material-icons sidebar-user-icon">account_circle</span>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">{{ currentUser()!.name }}</span>
+          <span class="sidebar-user-role" [class]="roleClass()">{{ roleLabel() }}</span>
+        </div>
+      </div>
+    }
+
+    <span class="sidebar-section-title">Menú Principal</span>
+    <ul class="sidebar-nav">
+      @for (item of navItems(); track item.route) {
+        <li>
+          <a [routerLink]="item.route"
+             routerLinkActive="active"
+             (click)="pageTitle.set(pageMeta[item.route]?.title || ''); pageDesc.set(pageMeta[item.route]?.desc || '')">
+            <span class="material-icons">{{ item.icon }}</span>
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <span class="material-icons">logout</span>
+        Cerrar sesión
+      </button>
+      <span>SIDOM v1.0 &copy; 2026</span>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="sidom-main">
+    <!-- Header -->
+    <header class="sidom-header">
+      <div class="header-left">
+        <h2>{{ pageTitle() }}</h2>
+        <p>{{ pageDesc() }}</p>
+      </div>
+      <div class="header-right">
+        <span class="header-badge">
+          <span class="material-icons" style="font-size:14px;vertical-align:middle;margin-right:4px;">calendar_today</span>
+          {{ currentDate }}
+        </span>
+        @if (currentUser()) {
+          <span class="header-user-badge" [class]="roleClass()">
+            <span class="material-icons" style="font-size:14px;vertical-align:middle;margin-right:4px;">person</span>
+            {{ currentUser()!.name }}
+          </span>
+        }
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="sidom-content">
+      <router-outlet (activate)="onRouteActivate($event)" />
+    </main>
+  </div>
+</div>

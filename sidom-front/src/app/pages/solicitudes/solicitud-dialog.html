@@ -1,0 +1,86 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Solicitud' : 'Nueva Solicitud' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff"><span class="material-icons">close</span></button>
+  </div>
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción (mín. 10 caracteres)</mat-label>
+          <textarea matInput formControlName="descripcionSolicitud" rows="3"></textarea>
+          @if (form.get('descripcionSolicitud')?.hasError('minlength')) {
+            <mat-error>Mínimo 10 caracteres</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Dir. Recogida</mat-label>
+          <input matInput formControlName="direccionRecogidaSolicitud" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Dir. Entrega *</mat-label>
+          <input matInput formControlName="direccionEntregaSolicitud" />
+          @if (form.get('direccionEntregaSolicitud')?.hasError('required')) {
+            <mat-error>Requerida</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <mat-select formControlName="cliente">
+            @for (c of clientes(); track c.id) {
+              <mat-option [value]="c.id">{{ c.nombresCliente }} {{ c.apellidosCliente }} ({{ c.identificacionCliente }})</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo Zona</mat-label>
+          <mat-select formControlName="tipoZona">
+            @for (t of tiposPorCategoria('CAT_ZONA'); track t.id) {
+              <mat-option [value]="t.id">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo Servicio</mat-label>
+          <mat-select formControlName="tipoServicio">
+            @for (t of tiposPorCategoria('CAT_SERVICIO'); track t.id) {
+              <mat-option [value]="t.id">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado (automático)</mat-label>
+          <mat-select formControlName="tipoEstado">
+            <mat-option [value]="null">Asignar automáticamente</mat-option>
+            @for (t of tiposPorCategoria('CAT_ESTADO_SOL'); track t.id) {
+              <mat-option [value]="t.id">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Motivo Rechazo (opcional)</mat-label>
+          <mat-select formControlName="tipoMotivoRechazo">
+            <mat-option [value]="null">Ninguno</mat-option>
+            @for (t of tiposPorCategoria('CAT_MOTIVO'); track t.id) {
+              <mat-option [value]="t.id">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

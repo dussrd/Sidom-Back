@@ -1,0 +1,153 @@
+@if (loading()) {
+  <div class="loading-spinner"><mat-spinner diameter="48" /></div>
+} @else {
+
+<div class="rappi-layout">
+
+  <!-- ===== COLUMNA IZQUIERDA: lista de pedidos ===== -->
+  <div class="orders-panel">
+
+    <!-- Header -->
+    <div class="orders-header">
+      <div>
+        <h2>Mis Pedidos</h2>
+        <p>{{ cards().length }} pedido{{ cards().length !== 1 ? 's' : '' }} en total</p>
+      </div>
+      <button mat-flat-button class="btn-nuevo-pedido" (click)="openPedido()">
+        <span class="material-icons">add</span>
+        Nuevo pedido
+      </button>
+    </div>
+
+    <!-- Lista de pedidos -->
+    <div class="orders-list">
+      @if (cards().length === 0) {
+        <div class="empty-orders">
+          <span class="material-icons">local_shipping</span>
+          <h3>Aún no tienes pedidos</h3>
+          <p>Haz tu primer pedido y te lo llevamos en minutos</p>
+          <button mat-flat-button class="btn-nuevo-pedido" (click)="openPedido()">
+            <span class="material-icons">add_shopping_cart</span>
+            Hacer mi primer pedido
+          </button>
+        </div>
+      }
+
+      @for (card of cards(); track card.solicitud.id) {
+        <div class="order-card" [class.order-card--active]="selected()?.solicitud?.id === card.solicitud.id"
+             [class.order-card--rechazada]="isRechazada(card)"
+             (click)="selectCard(card)">
+
+          <!-- Top row -->
+          <div class="oc-top">
+            <div class="oc-service-icon" [class]="'svc-' + card.tipoServicioNombre.toLowerCase()">
+              <span class="material-icons">{{ serviceIcon(card.tipoServicioNombre) }}</span>
+            </div>
+            <div class="oc-info">
+              <span class="oc-title">{{ card.solicitud.descripcionSolicitud }}</span>
+              <span class="oc-meta">
+                #{{ card.solicitud.id }} · {{ card.tipoServicioNombre }} · {{ card.solicitud.fechaSolicitud }}
+              </span>
+            </div>
+            <span class="oc-badge" [class]="badgeClass(card.estadoCodigo)">
+              {{ card.estadoNombre }}
+            </span>
+          </div>
+
+          <!-- Timeline de estados -->
+          @if (!isRechazada(card)) {
+            <div class="oc-timeline">
+              @for (step of timeline; track step.codigo; let last = $last) {
+                <div class="tl-step" [class]="'tl-' + timelineStep(card, step.codigo)">
+                  <div class="tl-dot">
+                    <span class="material-icons">{{ step.icon }}</span>
+                  </div>
+                  <span class="tl-label">{{ step.label }}</span>
+                </div>
+                @if (!last) { <div class="tl-line" [class.tl-line--done]="timelineStep(card, step.codigo) === 'done'"></div> }
+              }
+            </div>
+          } @else {
+            <div class="oc-rechazada">
+              <span class="material-icons">cancel</span>
+              Pedido rechazado
+              @if (card.solicitud.tipoMotivoRechazo) {
+                — motivo registrado por el administrador
+              }
+            </div>
+          }
+
+          <!-- Domiciliario -->
+          @if (card.domiciliario) {
+            <div class="oc-domi">
+              <div class="oc-domi-avatar">
+                <span class="material-icons">delivery_dining</span>
+              </div>
+              <div class="oc-domi-info">
+                <span class="oc-domi-name">
+                  {{ card.domiciliario.nombresDomiciliario }} {{ card.domiciliario.apellidosDomiciliario }}
+                </span>
+                <span class="oc-domi-meta">
+                  📞 {{ card.domiciliario.telefonoDomiciliario }}
+                  &nbsp;·&nbsp;
+                  🏍️ {{ card.domiciliario.tipoVehiculoDomiciliario }} {{ card.domiciliario.placaDomiciliario }}
+                </span>
+              </div>
+              @if (card.ultimaUbicacion) {
+                <span class="gps-dot" title="Ubicación GPS activa"></span>
+              }
+            </div>
+          }
+
+          <!-- Dirección destino -->
+          <div class="oc-address">
+            <span class="material-icons">location_on</span>
+            {{ card.solicitud.direccionEntregaSolicitud }}
+            @if (card.solicitud.direccionRecogidaSolicitud) {
+              <span class="oc-address-from">
+                &nbsp;·&nbsp;<span class="material-icons" style="font-size:13px">store</span>
+                Recogida: {{ card.solicitud.direccionRecogidaSolicitud }}
+              </span>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ===== COLUMNA DERECHA: mapa ===== -->
+  <div class="map-panel">
+    <div class="map-sticky">
+      <!-- Info del pedido seleccionado -->
+      @if (selected()) {
+        <div class="map-selected-info">
+          <div class="msi-row">
+            <span class="material-icons">info</span>
+            <strong>{{ selected()!.solicitud.descripcionSolicitud }}</strong>
+          </div>
+          <div class="msi-row msi-dest">
+            <span class="material-icons">flag</span>
+            Destino: {{ selected()!.solicitud.direccionEntregaSolicitud }}
+          </div>
+          @if (selected()!.ultimaUbicacion) {
+            <div class="msi-row msi-gps">
+              <span class="material-icons">my_location</span>
+              Domiciliario visto a las {{ formatHora(selected()!.ultimaUbicacion!.hora) }}
+            </div>
+          } @else {
+            <div class="msi-row msi-nogps">
+              <span class="material-icons">location_off</span>
+              Sin ubicación GPS del domiciliario aún
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Mapa Leaflet -->
+      <div #mapEl class="domicilios-map"></div>
+    </div>
+  </div>
+
+</div>
+}

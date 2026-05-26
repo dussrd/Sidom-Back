@@ -1,0 +1,132 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Entregas</h2>
+    <p>Historial de estados, seguimientos y novedades</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+} @else {
+  <mat-tab-group dynamicHeight>
+    <!-- Historial -->
+    <mat-tab label="Historial de Estados">
+      <div style="padding:16px 0">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>Historial Estados</h3>
+            <button class="btn-primary" mat-flat-button (click)="openHistorial()"><span class="material-icons">add</span>Nuevo</button>
+          </div>
+          <mat-table [dataSource]="dsHistorial">
+            <ng-container matColumnDef="id"><mat-header-cell *matHeaderCellDef>#</mat-header-cell><mat-cell *matCellDef="let r">{{ r.id }}</mat-cell></ng-container>
+            <ng-container matColumnDef="tipoEstado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge neutral">{{ getTipo(r.tipoEstado) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="observacion">
+              <mat-header-cell *matHeaderCellDef>Observación</mat-header-cell>
+              <mat-cell *matCellDef="let r" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.observacionHistorial || '—' }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fecha"><mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell><mat-cell *matCellDef="let r">{{ r.fechaCambioHistorial | slice:0:16 }}</mat-cell></ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <div class="actions-cell">
+                  <button mat-icon-button class="btn-icon edit" (click)="openHistorial(r)"><span class="material-icons">edit</span></button>
+                  <button mat-icon-button class="btn-icon delete" (click)="delHistorial(r.id!)"><span class="material-icons">delete</span></button>
+                </div>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="colsHistorial"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: colsHistorial;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons />
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Seguimientos -->
+    <mat-tab label="Seguimientos">
+      <div style="padding:16px 0">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>Seguimientos de Entrega</h3>
+            <button class="btn-primary" mat-flat-button (click)="openSeguimiento()"><span class="material-icons">add</span>Nuevo</button>
+          </div>
+          <mat-table [dataSource]="dsSeguimiento">
+            <ng-container matColumnDef="id"><mat-header-cell *matHeaderCellDef>#</mat-header-cell><mat-cell *matCellDef="let r">{{ r.id }}</mat-cell></ng-container>
+            <ng-container matColumnDef="asignacion">
+              <mat-header-cell *matHeaderCellDef>Asignación</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge info">{{ getAsignacion(r.asignacion) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="estimada"><mat-header-cell *matHeaderCellDef>Fecha Estimada</mat-header-cell><mat-cell *matCellDef="let r">{{ r.fechaEstimadaSeguimiento | slice:0:16 }}</mat-cell></ng-container>
+            <ng-container matColumnDef="real"><mat-header-cell *matHeaderCellDef>Fecha Real</mat-header-cell><mat-cell *matCellDef="let r">{{ r.fechaRealSeguimiento ? (r.fechaRealSeguimiento | slice:0:16) : '—' }}</mat-cell></ng-container>
+            <ng-container matColumnDef="cumplimiento">
+              <mat-header-cell *matHeaderCellDef>Cumplimiento</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <span [class]="'badge ' + cumplimientoBadge(r.cumplimientoSeguimiento)">{{ r.cumplimientoSeguimiento }}</span>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <div class="actions-cell">
+                  <button mat-icon-button class="btn-icon edit" (click)="cambiarEstado(r)" title="Cambiar estado"><span class="material-icons">swap_horiz</span></button>
+                  <button mat-icon-button class="btn-icon edit" (click)="openSeguimiento(r)"><span class="material-icons">edit</span></button>
+                  <button mat-icon-button class="btn-icon delete" (click)="delSeguimiento(r.id!)"><span class="material-icons">delete</span></button>
+                </div>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="colsSeguimiento"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: colsSeguimiento;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons />
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Novedades -->
+    <mat-tab label="Novedades">
+      <div style="padding:16px 0">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>Novedades</h3>
+            <button class="btn-primary" mat-flat-button (click)="openNovedad()"><span class="material-icons">add</span>Nueva</button>
+          </div>
+          <mat-table [dataSource]="dsNovedad">
+            <ng-container matColumnDef="id"><mat-header-cell *matHeaderCellDef>#</mat-header-cell><mat-cell *matCellDef="let r">{{ r.id }}</mat-cell></ng-container>
+            <ng-container matColumnDef="seguimiento">
+              <mat-header-cell *matHeaderCellDef>Seguimiento</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge info">{{ getSeguimiento(r.seguimientoEntrega) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+              <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
+              <mat-cell *matCellDef="let r" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" [title]="r.descripcionNovedad">{{ r.descripcionNovedad }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="tipo">
+              <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge warning">{{ getTipo(r.tipoNovedad) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let r"><span class="badge neutral">{{ getTipo(r.tipoEstado) }}</span></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let r">
+                <div class="actions-cell">
+                  <button mat-icon-button class="btn-icon edit" (click)="resolver(r)" title="Resolver novedad"><span class="material-icons">done_all</span></button>
+                  <button mat-icon-button class="btn-icon edit" (click)="openNovedad(r)"><span class="material-icons">edit</span></button>
+                  <button mat-icon-button class="btn-icon delete" (click)="delNovedad(r.id!)"><span class="material-icons">delete</span></button>
+                </div>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="colsNovedad"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: colsNovedad;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons />
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+}

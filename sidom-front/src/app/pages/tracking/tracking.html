@@ -1,0 +1,90 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Tracking</h2>
+    <p>Registro y visualización de ubicaciones de domiciliarios</p>
+  </div>
+  <button class="btn-primary" mat-flat-button (click)="openDialog()">
+    <span class="material-icons">add_location</span>Registrar Ubicación
+  </button>
+</div>
+
+<!-- Mapa -->
+<div class="table-card" style="margin-bottom:24px">
+  <div class="table-card-header">
+    <h3>
+      <span class="material-icons" style="vertical-align:middle;margin-right:8px;color:#1565c0">map</span>
+      Mapa de Ubicaciones
+    </h3>
+    <span class="badge info">
+      <span class="material-icons" style="font-size:13px;vertical-align:middle;margin-right:3px">location_on</span>
+      {{ dataSource.data.length }} puntos
+    </span>
+  </div>
+  <div #mapEl class="tracking-map"></div>
+  @if (!mapReady && !loading()) {
+    <div class="empty-state" style="padding:32px">
+      <span class="material-icons">location_off</span>
+      <h4>Sin ubicaciones registradas</h4>
+      <p>Registra la primera ubicación para verla en el mapa</p>
+    </div>
+  }
+</div>
+
+<!-- Tabla -->
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Historial de Ubicaciones</h3>
+    <div style="display:flex;align-items:center;gap:8px">
+      @if (loading()) {
+        <mat-spinner diameter="20" />
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+  } @else {
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.id }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="asignacion">
+        <mat-header-cell *matHeaderCellDef>Asignación</mat-header-cell>
+        <mat-cell *matCellDef="let r"><span class="badge info">{{ getAsignacion(r.asignacion) }}</span></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="latitud">
+        <mat-header-cell *matHeaderCellDef>Latitud</mat-header-cell>
+        <mat-cell *matCellDef="let r"><code style="background:#f0f4ff;padding:2px 6px;border-radius:4px;font-size:12px">{{ r.latitudUbicacion }}</code></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="longitud">
+        <mat-header-cell *matHeaderCellDef>Longitud</mat-header-cell>
+        <mat-cell *matCellDef="let r"><code style="background:#f0f4ff;padding:2px 6px;border-radius:4px;font-size:12px">{{ r.longitudUbicacion }}</code></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="fecha">
+        <mat-header-cell *matHeaderCellDef>Fecha/Hora</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.fechaHoraUbicacion | slice:0:19 }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          <div class="actions-cell">
+            <button mat-icon-button class="btn-icon edit" (click)="openDialog(r)" title="Editar"><span class="material-icons">edit</span></button>
+            <button mat-icon-button class="btn-icon delete" (click)="delete(r.id!)" title="Eliminar"><span class="material-icons">delete</span></button>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <span class="material-icons">location_off</span>
+            <h4>Sin registros de ubicación</h4>
+          </div>
+        </td>
+      </tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  }
+</div>

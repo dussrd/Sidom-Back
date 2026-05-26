@@ -1,0 +1,84 @@
+<div class="page-header">
+  <div class="page-title">
+    <h2>Solicitudes</h2>
+    <p>Pedidos y solicitudes de entrega</p>
+  </div>
+  @if (isAdmin) {
+    <button class="btn-primary" mat-flat-button (click)="openDialog()">
+      <span class="material-icons">add</span>Nueva Solicitud
+    </button>
+  }
+</div>
+
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Lista de Solicitudes</h3>
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input placeholder="Buscar..." (input)="filter($event)" />
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+  } @else {
+    <mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>#</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.id }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="fecha">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+        <mat-cell *matCellDef="let r">{{ r.fechaSolicitud }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="descripcion">
+        <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
+        <mat-cell *matCellDef="let r" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" [title]="r.descripcionSolicitud">{{ r.descripcionSolicitud }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="cliente">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</mat-header-cell>
+        <mat-cell *matCellDef="let r"><span class="badge info">{{ getCliente(r.cliente) }}</span></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="estado">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let r"><span class="badge neutral">{{ getTipo(r.tipoEstado) }}</span></mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="entrega">
+        <mat-header-cell *matHeaderCellDef>Dir. Entrega</mat-header-cell>
+        <mat-cell *matCellDef="let r" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" [title]="r.direccionEntregaSolicitud">{{ r.direccionEntregaSolicitud }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="proceso">
+        <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          <div class="actions-cell">
+            @if (canPublicar(r)) {
+              <button mat-icon-button class="btn-icon edit" (click)="publicar(r)" title="Publicar al pool"><span class="material-icons">publish</span></button>
+            }
+            @if (canReintentar(r)) {
+              <button mat-icon-button class="btn-icon edit" (click)="reintentar(r)" title="Reintentar validación"><span class="material-icons">refresh</span></button>
+            }
+          </div>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <mat-cell *matCellDef="let r">
+          @if (isAdmin) {
+            <div class="actions-cell">
+              <button mat-icon-button class="btn-icon edit" (click)="openDialog(r)"><span class="material-icons">edit</span></button>
+              <button mat-icon-button class="btn-icon delete" (click)="delete(r.id!)"><span class="material-icons">delete</span></button>
+            </div>
+          }
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">
+          <div class="empty-state"><span class="material-icons">assignment</span><h4>No hay solicitudes</h4></div>
+        </td>
+      </tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  }
+</div>

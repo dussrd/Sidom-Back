@@ -1,0 +1,29 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ isEdit ? 'Editar Asignación' : 'Nueva Asignación' }}</h2>
+    <button mat-icon-button (click)="dialogRef.close()" style="color:#fff"><span class="material-icons">close</span></button>
+  </div>
+  <form [formGroup]="form">
+    <div class="dialog-body">
+      <div class="form-row single">
+        <mat-form-field appearance="outline">
+          <mat-label>Solicitud Disponible</mat-label>
+          <mat-select formControlName="solicitudDisponible">
+            @for (d of disponibles(); track d.id) {
+              <mat-option [value]="d.id">#{{ d.id }} — Solicitud #{{ d.solicitud }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('solicitudDisponible')?.hasError('required')) {
+            <mat-error>Requerido</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-flat-button class="btn-primary" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </form>
+</div>

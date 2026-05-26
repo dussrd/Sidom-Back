@@ -1,0 +1,70 @@
+<div class="perfil-container">
+  @if (loading()) {
+    <div class="loading-spinner"><mat-spinner diameter="40" /></div>
+  } @else if (error()) {
+    <div class="perfil-error">
+      <span class="material-icons">error_outline</span>
+      {{ error() }}
+    </div>
+  } @else {
+    <div class="perfil-card">
+      <div class="perfil-avatar">
+        <span class="material-icons">account_circle</span>
+      </div>
+      <div class="perfil-name">{{ user()?.name }}</div>
+      <div class="perfil-role-badge" [class]="'role-' + user()?.role?.toLowerCase()">
+        {{ user()?.role === 'CLIENTE' ? 'Cliente' : 'Domiciliario' }}
+      </div>
+
+      @if (cliente(); as c) {
+        <div class="perfil-fields">
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">badge</span> Identificación</span>
+            <span class="field-value">{{ c.identificacionCliente }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">person</span> Nombre completo</span>
+            <span class="field-value">{{ c.nombresCliente }} {{ c.apellidosCliente }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">email</span> Correo electrónico</span>
+            <span class="field-value">{{ c.correoCliente }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">phone</span> Teléfono</span>
+            <span class="field-value">{{ c.telefonoCliente }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">home</span> Dirección</span>
+            <span class="field-value">{{ c.direccionCliente }}</span>
+          </div>
+        </div>
+      }
+
+      @if (domiciliario(); as d) {
+        <div class="perfil-fields">
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">badge</span> Identificación</span>
+            <span class="field-value">{{ d.identificacionDomiciliario }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">person</span> Nombre completo</span>
+            <span class="field-value">{{ d.nombresDomiciliario }} {{ d.apellidosDomiciliario }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">phone</span> Teléfono</span>
+            <span class="field-value">{{ d.telefonoDomiciliario }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">two_wheeler</span> Tipo de vehículo</span>
+            <span class="field-value">{{ d.tipoVehiculoDomiciliario }}</span>
+          </div>
+          <div class="perfil-field">
+            <span class="field-label"><span class="material-icons">directions_car</span> Placa</span>
+            <span class="field-value">{{ d.placaDomiciliario }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

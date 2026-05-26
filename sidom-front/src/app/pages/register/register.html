@@ -1,0 +1,219 @@
+<div class="register-layout">
+  <!-- Panel izquierdo -->
+  <div class="register-brand">
+    <div class="brand-content">
+      <div class="brand-icon">
+        <span class="material-icons">local_shipping</span>
+      </div>
+      <h1>SIDOM</h1>
+      <p class="brand-sub">Sistema de Gestión de Domicilios</p>
+
+      <div class="brand-features">
+        <div class="feature-item">
+          <span class="material-icons">person_add</span>
+          <span>Regístrate como cliente para hacer pedidos</span>
+        </div>
+        <div class="feature-item">
+          <span class="material-icons">delivery_dining</span>
+          <span>Regístrate como domiciliario para trabajar</span>
+        </div>
+        <div class="feature-item">
+          <span class="material-icons">verified_user</span>
+          <span>Cuenta activada de inmediato</span>
+        </div>
+      </div>
+    </div>
+    <div class="brand-footer">
+      <p>Universidad de La Guajira · Base de Datos II · 2026</p>
+    </div>
+  </div>
+
+  <!-- Panel derecho -->
+  <div class="register-form-panel">
+    <div class="register-card">
+      <div class="register-header">
+        <h2>Crear Cuenta</h2>
+        <p>Completa el formulario para registrarte</p>
+      </div>
+
+      <!-- Selección de rol -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>¿Cómo quieres registrarte?</mat-label>
+        <mat-select [formControl]="base.controls.rol" (selectionChange)="onRolChange($event.value)">
+          <mat-option value="CLIENTE">
+            <span class="material-icons" style="vertical-align:middle;margin-right:6px;font-size:18px">person</span>
+            Cliente
+          </mat-option>
+          <mat-option value="DOMICILIARIO">
+            <span class="material-icons" style="vertical-align:middle;margin-right:6px;font-size:18px">delivery_dining</span>
+            Domiciliario
+          </mat-option>
+        </mat-select>
+        @if (base.get('rol')?.hasError('required') && base.get('rol')?.touched) {
+          <mat-error>Selecciona un rol</mat-error>
+        }
+      </mat-form-field>
+
+      @if (rol() === 'CLIENTE') {
+        <!-- Campos de cliente -->
+        <div class="section-title">
+          <span class="material-icons">person</span> Datos personales
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Identificación</mat-label>
+            <input matInput [formControl]="clienteForm.controls.identificacionCliente" placeholder="Número de documento" />
+            @if (clienteForm.get('identificacionCliente')?.hasError('required') && clienteForm.get('identificacionCliente')?.touched) {
+              <mat-error>Requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="form-row two-cols">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombres</mat-label>
+            <input matInput [formControl]="clienteForm.controls.nombresCliente" />
+            @if (clienteForm.get('nombresCliente')?.invalid && clienteForm.get('nombresCliente')?.touched) {
+              <mat-error>Mínimo 3 caracteres</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput [formControl]="clienteForm.controls.apellidosCliente" />
+            @if (clienteForm.get('apellidosCliente')?.invalid && clienteForm.get('apellidosCliente')?.touched) {
+              <mat-error>Mínimo 3 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="form-row two-cols">
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [formControl]="clienteForm.controls.telefonoCliente" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="email" [formControl]="clienteForm.controls.correoCliente" />
+            @if (clienteForm.get('correoCliente')?.hasError('email') && clienteForm.get('correoCliente')?.touched) {
+              <mat-error>Correo inválido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección</mat-label>
+          <input matInput [formControl]="clienteForm.controls.direccionCliente" />
+        </mat-form-field>
+      }
+
+      @if (rol() === 'DOMICILIARIO') {
+        <!-- Campos de domiciliario -->
+        <div class="section-title">
+          <span class="material-icons">delivery_dining</span> Datos personales
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Identificación</mat-label>
+            <input matInput [formControl]="domForm.controls.identificacionDomiciliario" placeholder="Número de documento" />
+            @if (domForm.get('identificacionDomiciliario')?.hasError('required') && domForm.get('identificacionDomiciliario')?.touched) {
+              <mat-error>Requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="form-row two-cols">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombres</mat-label>
+            <input matInput [formControl]="domForm.controls.nombresDomiciliario" />
+            @if (domForm.get('nombresDomiciliario')?.invalid && domForm.get('nombresDomiciliario')?.touched) {
+              <mat-error>Mínimo 3 caracteres</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput [formControl]="domForm.controls.apellidosDomiciliario" />
+            @if (domForm.get('apellidosDomiciliario')?.invalid && domForm.get('apellidosDomiciliario')?.touched) {
+              <mat-error>Mínimo 3 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="form-row two-cols">
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [formControl]="domForm.controls.telefonoDomiciliario" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de vehículo</mat-label>
+            <mat-select [formControl]="domForm.controls.tipoVehiculoDomiciliario">
+              <mat-option value="Moto">Moto</mat-option>
+              <mat-option value="Bicicleta">Bicicleta</mat-option>
+              <mat-option value="Carro">Carro</mat-option>
+              <mat-option value="Patineta">Patineta eléctrica</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Placa del vehículo</mat-label>
+          <input matInput [formControl]="domForm.controls.placaDomiciliario" placeholder="ABC-123" style="text-transform:uppercase" />
+          @if (domForm.get('placaDomiciliario')?.hasError('required') && domForm.get('placaDomiciliario')?.touched) {
+            <mat-error>Requerido</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      @if (rol()) {
+        <!-- Credenciales de acceso -->
+        <div class="section-title">
+          <span class="material-icons">lock</span> Credenciales de acceso
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre de usuario</mat-label>
+          <input matInput [formControl]="base.controls.username" placeholder="Mínimo 4 caracteres" autocomplete="username" />
+          <mat-icon matSuffix>person</mat-icon>
+          @if (base.get('username')?.hasError('required') && base.get('username')?.touched) {
+            <mat-error>Requerido</mat-error>
+          }
+          @if (base.get('username')?.hasError('minlength') && base.get('username')?.touched) {
+            <mat-error>Mínimo 4 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [formControl]="base.controls.password"
+                 [type]="showPass() ? 'text' : 'password'"
+                 placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+          <button matSuffix mat-icon-button type="button" (click)="showPass.set(!showPass())">
+            <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (base.get('password')?.hasError('required') && base.get('password')?.touched) {
+            <mat-error>Requerida</mat-error>
+          }
+          @if (base.get('password')?.hasError('minlength') && base.get('password')?.touched) {
+            <mat-error>Mínimo 8 caracteres</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      @if (error()) {
+        <div class="register-error">
+          <span class="material-icons">error_outline</span>
+          {{ error() }}
+        </div>
+      }
+
+      <button mat-flat-button type="button" class="register-btn" [disabled]="loading()" (click)="register()">
+        @if (loading()) {
+          <mat-spinner diameter="20" style="margin-right:8px" />
+          Registrando...
+        } @else {
+          <ng-container>
+            <span class="material-icons">how_to_reg</span>
+            Crear cuenta
+          </ng-container>
+        }
+      </button>
+
+      <p class="login-link">
+        ¿Ya tienes cuenta?
+        <a routerLink="/login">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
+</div>
